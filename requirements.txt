@@ -1,0 +1,6 @@
+discord.py==2.3.2
+aiohttp==3.8.6
+attrs==23.1.0
+charset-normalizer==3.3.0
+multidict==6.0.4
+yarl==1.9.2
