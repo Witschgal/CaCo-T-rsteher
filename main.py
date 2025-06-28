@@ -1,3 +1,4 @@
+from keep_alive import keep_alive
 import discord
 from discord.ext import commands
 import random
@@ -104,4 +105,5 @@ if __name__ == "__main__":
     server_thread.start()
     
     # Discord Bot starten
+    keep_alive()
     run_bot()
