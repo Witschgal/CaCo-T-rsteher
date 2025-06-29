@@ -117,6 +117,28 @@ async def channels_command(ctx):
     channel_list = [ch.name for ch in ctx.guild.channels if isinstance(ch, discord.TextChannel)]
     await ctx.send(f"Text-Channels: {', '.join(channel_list)}")
 
+@bot.command(name='debug')
+async def debug_command(ctx):
+    # Zeige alle Rollen des Users
+    user_roles = [role.name for role in ctx.author.roles]
+    await ctx.send(f"Deine Rollen: {user_roles}")
+    
+    # Teste Channel-Zugriff
+    channel = discord.utils.get(ctx.guild.channels, name="〢𝘛𝘰𝘳-𝘻𝘶𝘮-𝘊𝘩𝘢𝘰𝘴")
+    if channel:
+        # Prüfe Bot-Permissions
+        perms = channel.permissions_for(ctx.guild.me)
+        await ctx.send(f"Channel gefunden! Send Messages: {perms.send_messages}")
+        
+        # Test-Nachricht senden
+        try:
+            await channel.send("🧪 Test-Nachricht vom Bot!")
+            await ctx.send("✅ Test-Nachricht erfolgreich gesendet!")
+        except Exception as e:
+            await ctx.send(f"❌ Fehler: {e}")
+    else:
+        await ctx.send("❌ Channel nicht gefunden!")
+
 # Bot starten
 print("🔍 Prüfe Discord Token...")
 token = os.environ.get('DISCORD_TOKEN')
