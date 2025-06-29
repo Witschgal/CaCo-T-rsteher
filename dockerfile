@@ -1,3 +1,18 @@
+ passiert.
+
+Lösung:
+1. Dockerfile anpassen:
+
+Dockerfile (optional)
+Code 
+2. main.py mit Debug-Logs ersetzen:
+
+main.py (Final mit Debug + Port 10000)
+Code 
+
+
+
+
 FROM python:3.11-slim
 
 WORKDIR /app
