@@ -92,11 +92,12 @@ async def on_member_update(before, after):
     if WELCOME_ROLE not in before_roles and WELCOME_ROLE in after_roles:
         print(f"🎉 {after.name} hat '{WELCOME_ROLE}' Rolle erhalten!")
         
-        channel_name = "〢𝘛𝘰𝘳-𝘻𝘶𝘮-𝘊𝘩𝘢𝘰𝘴"
-        channel = discord.utils.get(after.guild.channels, name=channel_name)
+        # Mit Channel ID statt Name (VIEL zuverlässiger!)
+        WELCOME_CHANNEL_ID = 1199437871350812733  # Tor-zum-Chaos Channel
+        channel = bot.get_channel(WELCOME_CHANNEL_ID)
         
         if channel:
-            print(f"✅ Channel '{channel_name}' gefunden!")
+            print(f"✅ Channel gefunden: {channel.name}")
             try:
                 spruch = random.choice(begruessung_sprueche)
                 nachricht = spruch.format(user=after.mention)
@@ -105,7 +106,7 @@ async def on_member_update(before, after):
             except Exception as e:
                 print(f"❌ Fehler beim Senden: {e}")
         else:
-            print(f"❌ Channel '{channel_name}' nicht gefunden!")
+            print(f"❌ Channel mit ID {WELCOME_CHANNEL_ID} nicht gefunden!")
 
 @bot.command(name='test')
 async def test_command(ctx):
@@ -119,25 +120,24 @@ async def channels_command(ctx):
 
 @bot.command(name='debug')
 async def debug_command(ctx):
-    # Zeige alle Rollen des Users
     user_roles = [role.name for role in ctx.author.roles]
     await ctx.send(f"Deine Rollen: {user_roles}")
     
-    # Teste Channel-Zugriff
-    channel = discord.utils.get(ctx.guild.channels, name="〢𝘛𝘰𝘳-𝘻𝘶𝘮-𝘊𝘩𝘢𝘰𝘴")
+    # Test mit Channel ID
+    WELCOME_CHANNEL_ID = 1199437871350812733  # Tor-zum-Chaos Channel
+    channel = bot.get_channel(WELCOME_CHANNEL_ID)
+    
     if channel:
-        # Prüfe Bot-Permissions
         perms = channel.permissions_for(ctx.guild.me)
-        await ctx.send(f"Channel gefunden! Send Messages: {perms.send_messages}")
+        await ctx.send(f"Channel gefunden: {channel.name}! Send Messages: {perms.send_messages}")
         
-        # Test-Nachricht senden
         try:
             await channel.send("🧪 Test-Nachricht vom Bot!")
             await ctx.send("✅ Test-Nachricht erfolgreich gesendet!")
         except Exception as e:
             await ctx.send(f"❌ Fehler: {e}")
     else:
-        await ctx.send("❌ Channel nicht gefunden!")
+        await ctx.send("❌ Channel mit ID nicht gefunden!")
 
 # Bot starten
 print("🔍 Prüfe Discord Token...")
