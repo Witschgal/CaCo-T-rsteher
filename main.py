@@ -1,4 +1,3 @@
-from keep_alive import keep_alive
 import discord
 from discord.ext import commands
 import random
@@ -68,20 +67,32 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    # Suche den Channel "〢𝘛𝘰𝘳-𝘻𝘶𝘮-𝘊𝘩𝘢𝘰𝘴"
-    channel_name = "〢𝘛𝘰𝘳-𝘻𝘶𝘮-𝘊𝘩𝘢𝘰𝘴"
-    channel = discord.utils.get(member.guild.channels, name=channel_name)
+    print(f"Neues Mitglied beigetreten: {member.name} (wartet auf ChaosCom Rolle)")
+
+@bot.event
+async def on_member_update(before, after):
+    # Name der Rolle die Mitglieder nach Regelakzeptanz bekommen
+    WELCOME_ROLE = "ChaosCom"
     
-    if channel:
-        # Wähle einen zufälligen Spruch aus und setze den User-Ping ein
-        spruch = random.choice(begruessung_sprueche)
-        nachricht = spruch.format(user=member.mention)
+    # Prüfe ob die ChaosCom Rolle hinzugefügt wurde
+    before_role_names = [role.name for role in before.roles]
+    after_role_names = [role.name for role in after.roles]
+    
+    if WELCOME_ROLE not in before_role_names and WELCOME_ROLE in after_role_names:
+        print(f"Mitglied {after.name} hat '{WELCOME_ROLE}' Rolle erhalten - sende Begrüßung")
         
-        # Sende die Begrüßungsnachricht
-        await channel.send(nachricht)
-        print(f"Begrüßung gesendet für {member.name}")
-    else:
-        print(f"Channel '{channel_name}' nicht gefunden!")
+        # Suche den Channel
+        channel_name = "〢𝘛𝘰𝘳-𝘻𝘶𝘮-𝘊𝘩𝘢𝘰𝘴"
+        channel = discord.utils.get(after.guild.channels, name=channel_name)
+        
+        if channel:
+            # Sende Begrüßung
+            spruch = random.choice(begruessung_sprueche)
+            nachricht = spruch.format(user=after.mention)
+            await channel.send(nachricht)
+            print(f"Begrüßung gesendet für {after.name}")
+        else:
+            print(f"Channel '{channel_name}' nicht gefunden!")
 
 # Einfacher Test-Befehl
 @bot.command(name='test')
@@ -105,5 +116,4 @@ if __name__ == "__main__":
     server_thread.start()
     
     # Discord Bot starten
-    keep_alive()
     run_bot()
