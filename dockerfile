@@ -1,6 +1,3 @@
- passiert.
-
-Lösung:
 1. Dockerfile anpassen:
 
 Dockerfile (optional)
